@@ -10,27 +10,24 @@
 # Test pour création d'une Shiny App (basé sur tuto https://mastering-shiny.org/basic-app.html)
 library(shiny)
 library(ggplot2)
+library(tidyverse)
+library(readr)
 
-datasets <- data(package = "ggplot2")$results[c(2, 4, 10), "Item"]
+ACCR <- read_delim("~/Desktop/ProjectR/DataTestPerso/AccidentsRoute/ACCR2018.csv", 
+                       ";", escape_double = FALSE, trim_ws = TRUE)
 
 ui <- fluidPage(
-    selectInput("dataset", "Dataset", choices = datasets),
-    verbatimTextOutput("summary"),
-    plotOutput("plot")
+    selectInput("accidents", "Type de véhicule", ACCR$catv),
+    tableOutput("table")
 )
 
 server <- function(input, output, session) {
-    dataset <- reactive({
-        get(input$dataset, "package:ggplot2")
+    accidents <- reactive({
+        get(input$accidents)
     })
-    output$summary <- renderPrint({
-        summary(dataset())
+    output$table <- renderTable({
+        accidents()
     })
-    output$plot <- renderPlot({
-        plot(dataset())
-    }, res = 96)
-    
-    
 }
 
 # Reprendre à la session 2.8
