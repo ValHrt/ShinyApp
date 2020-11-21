@@ -18,7 +18,7 @@ ui <- fluidPage(
     titlePanel("Corporate Finance"),
     sidebarLayout(
         sidebarPanel(
-            h2("Calcul du coût global du crédit"),
+            h2("Calcul du coût de l'annuité constante"),
             br(),
             img(src = "finance.png", height = 70, width = 250, align = "center"),
             br(),
@@ -29,21 +29,22 @@ ui <- fluidPage(
                          label = "Durée (en années) :",
                          value = 0),
             numericInput(inputId = "Tx",
-                         label = "Taux :",
+                         label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
                          value = 0)
         ),
-        mainPanel(mainPanel(h3(textOutput("CoutCredit"))
+        mainPanel(h3(textOutput("CoutCredit"))
             
         )
     )
-))
+)
 
 # Define server logic ----
 server <- function(input, output, session) {
-    output$CoutCredit <- renderPrint({
-firstF <- input$Tx / 1-(1+input$Tx)^-input$D
-results <- firstF * input$C
-results  
+    output$CoutCredit <- renderText({
+firstF <- (input$Tx/100) / (1-(1+input$Tx/100)^-input$D)
+secondF <- input$C
+results <- firstF * secondF
+paste("Le coût de l'annuité constante s'élève à ", results)  
 })
 }
 
