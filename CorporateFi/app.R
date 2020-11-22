@@ -48,6 +48,7 @@ server <- function(input, output, session) {
 firstF <- (input$Tx/100) / (1-(1+input$Tx/100)^-input$D)
 secondF <- input$C
 results <- firstF * secondF
+results <- format(round(results, 2), nsmall = 2)
 paste("Le coût de l'annuité constante s'élève à ", results)
     })
     
@@ -56,6 +57,7 @@ firstF <- (input$Tx/100) / (1-(1+input$Tx/100)^-input$D)
 secondF <- input$C
 results <- firstF * secondF
 thirdF <- results * input$D
+thirdF <- format(round(thirdF, 2), nsmall = 2)
 paste("Le coût total du crédit s'élève à ", thirdF)
     })
     
@@ -65,6 +67,7 @@ secondF <- input$C
 results <- firstF * secondF
 thirdF <- results * input$D
 fourthF <- thirdF - input$C
+fourthF <- format(round(fourthF, 2), nsmall = 2)
 paste("Le coût total des intérêts s'élèvent à ", fourthF)
     })
 }
