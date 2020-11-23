@@ -7,7 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-# Test pour création d'une Shiny App (basé sur tuto https://mastering-shiny.org/basic-app.html)
 library(shiny)
 library(shinythemes)
 library(ggplot2)
@@ -21,7 +20,7 @@ ui = fluidPage(theme = shinytheme("superhero"),
         sidebarPanel(
             h2("Calcul du coût de l'annuité constante"),
             br(),
-            img(src = "finance.png", height = 70, width = 250, align = "center"),
+            img(src = "annuite_constante.png", height = 70, width = 250, align = "center"),
             br(),
             numericInput(inputId = "C",
                           label = "Capital Emprunté :",
@@ -47,9 +46,9 @@ ui = fluidPage(theme = shinytheme("superhero"),
     tabPanel("Perpetuity",
              sidebarLayout(
                  sidebarPanel(
-                     h2("Perpetuity"),
+                     h2("Calcul de la valeur de la perpétuité"),
                      br(),
-                     img(src = "finance.png", height = 70, width = 250, align = "center"),
+                     img(src = "perpetuity.png", height = 70, width = 250, align = "center"),
                      br(),
                      numericInput(inputId = "AmountPerpetuity",
                                   label = "Montant de la perpétuité :",
@@ -62,9 +61,73 @@ ui = fluidPage(theme = shinytheme("superhero"),
                      h3(textOutput("MontantPerpetuite"))
                         )
                      )
+                 ),
+    tabPanel("Effective Annual Rate",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("Calcul du Taux Annuel Effectif"),
+                     br(),
+                     img(src = "ear.png", height = 70, width = 350, align = "center"),
+                     br(),
+                     numericInput(inputId = "CompoundingPeriods",
+                                  label = "Durée en années (ou en mois) :",
+                                  value = 0),
+                     numericInput(inputId = "TxEAR",
+                                  label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
+                                  value = 0),
+                 ),
+                 mainPanel(
+                     h3(textOutput("EAR"))
                  )
              )
+    ),
+    tabPanel("Discounting",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("Discounting calcul (pour passer de Future Value à Present Value)"),
+                     br(),
+                     img(src = "discounting.png", height = 70, width = 250, align = "center"),
+                     br(),
+                     numericInput(inputId = "FutureValue",
+                                  label = "Valeur de la Future Value :",
+                                  value = 0),
+                     numericInput(inputId = "TxDiscounting",
+                                  label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
+                                  value = 0),
+                     numericInput(inputId = "discountingPeriods",
+                                  label = "Durée en années (ou en mois) :",
+                                  value = 0)
+                 ),
+                 mainPanel(
+                     h3(textOutput("Discounting"))
+                 )
+             )
+    ),
+    tabPanel("Capitalisation",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("Capitalisation calcul (pour passer de Present Value à Future Value)"),
+                     br(),
+                     img(src = "capitalisation.png", height = 70, width = 250, align = "center"),
+                     br(),
+                     numericInput(inputId = "PresentValue1",
+                                  label = "Valeur de la Present Value :",
+                                  value = 0),
+                     numericInput(inputId = "TxCapitalisation",
+                                  label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
+                                  value = 0),
+                     numericInput(inputId = "capitalisationPeriods",
+                                  label = "Durée en années (ou en mois) :",
+                                  value = 0)
+                 ),
+                 mainPanel(
+                     h3(textOutput("Capitalisation"))
+                 )
+             )
+    )
+    )
 )
+             
 
             
 
@@ -102,6 +165,28 @@ paste("Le coût total des intérêts s'élèvent à ", fourthF)
 results2 <- input$AmountPerpetuity / (input$TxPerpetuity/100)
 results2 <- format(results2, scientific = FALSE)
 paste("Le montant de la perpétuité s'élève à ", results2)
+    })
+    
+    output$EAR <- renderText({
+TxEAR2 <- input$TxEAR / 100        
+results3 <- (1+TxEAR2/input$CompoundingPeriods)^input$CompoundingPeriods - 1
+results3 <- results3 * 100
+results3 <- format(results3, scientific = FALSE)
+paste("Le taux annuel effectif s'élève à ", results3, "%")
+    })
+    
+    output$Discounting <- renderText({
+TxDiscounting2 <- input$TxDiscounting / 100
+results4 <- input$FutureValue / (1+TxDiscounting2)^input$discountingPeriods
+results4 <- format(results4, scientific = FALSE)
+paste("La Present Value vaut ", results4)
+    })
+    
+    output$Capitalisation <- renderText({
+TxCapitalisation2 <- input$TxCapitalisation / 100
+results5 <- input$PresentValue1 * (1+TxCapitalisation2)^input$capitalisationPeriods
+results5 <- format(results5, scientific = FALSE)
+paste("La Future Value vaut ", results5)
     })
 }
 
