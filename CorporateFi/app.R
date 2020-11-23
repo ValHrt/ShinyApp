@@ -9,12 +9,14 @@
 
 # Test pour création d'une Shiny App (basé sur tuto https://mastering-shiny.org/basic-app.html)
 library(shiny)
+library(shinythemes)
 library(ggplot2)
 library(tidyverse)
 
 #Define UI ----
-ui <- fluidPage(
-    titlePanel("Corporate Finance"),
+ui = fluidPage(theme = shinytheme("superhero"),
+    navbarPage("Corporate Finance",
+    tabPanel("Crédit",
     sidebarLayout(
         sidebarPanel(
             h2("Calcul du coût de l'annuité constante"),
@@ -37,10 +39,35 @@ ui <- fluidPage(
                   h3(textOutput("CoutCredit"),
                      br(),
                      h3(textOutput("CoutInterets"))
-            
+                  )
+            )
         )
     )
-)))
+    ),
+    tabPanel("Perpetuity",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("Perpetuity"),
+                     br(),
+                     img(src = "finance.png", height = 70, width = 250, align = "center"),
+                     br(),
+                     numericInput(inputId = "AmountPerpetuity",
+                                  label = "Montant de la perpétuité :",
+                                  value = 0),
+                     numericInput(inputId = "TxPerpetuity",
+                                  label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
+                                  value = 0),
+                 ),
+                 mainPanel(
+                     h3(textOutput("MontantPerpetuite"))
+                        )
+                     )
+                 )
+             )
+)
+
+            
+
 
 # Define server logic ----
 server <- function(input, output, session) {
@@ -69,6 +96,12 @@ thirdF <- results * input$D
 fourthF <- thirdF - input$C
 fourthF <- format(round(fourthF, 2), nsmall = 2)
 paste("Le coût total des intérêts s'élèvent à ", fourthF)
+    })
+    
+    output$MontantPerpetuite <- renderText({
+results2 <- input$AmountPerpetuity / (input$TxPerpetuity/100)
+results2 <- format(results2, scientific = FALSE)
+paste("Le montant de la perpétuité s'élève à ", results2)
     })
 }
 
