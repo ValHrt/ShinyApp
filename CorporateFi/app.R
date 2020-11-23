@@ -179,6 +179,32 @@ ui = fluidPage(theme = shinytheme("superhero"),
            il faut alors indiquer 1,1,2,3,4 pour les périodes.", align = "center"),
                  )
              )}
+    ),
+    
+    tabPanel("PV of a security",{
+        sidebarLayout(
+            sidebarPanel(
+                h2("Calcul de la Present Value"),
+                br(),
+                img(src = "PV.png", height = 70, width = 250, align = "center"),
+                br(),
+                textInput('vec5', 'Entrer les cashflows (en séparant par une virgule)', "0,1,2,3"),
+                numericInput(inputId = "InvestPV",
+                             label = "Valeur de l'investissement de départ (ne pas mettre de -) :",
+                             value = 0),
+                textInput('vec6', 'Entrer les périodes (en séparant par une virgule)', "1,2,3,4"),
+                numericInput(inputId = "TxPV",
+                             label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
+                             value = 0)
+            ),
+            mainPanel(
+                h3(verbatimTextOutput("PV1")),
+                h5("Dans la case 'Entrer les périodes', il faut indiquer 
+           1,2,3,4 si vous avez 4 périodes. Dans le cas où il y aurait
+           2 cashflows sur une même période, par exemple en année 1,
+           il faut alors indiquer 1,1,2,3,4 pour les périodes.", align = "center")
+            )
+        )}
     )
     )
 )
@@ -258,6 +284,14 @@ vec3x <- as.numeric(unlist(strsplit(input$vec3,",")))
 vec4x <- as.numeric(unlist(strsplit(input$vec4,",")))
 results7 <- NPV(input$InvestNPV, vec3x, vec4x, TxNPV1)
 paste("La NPV vaut ", results7)
+    })
+    
+    output$PV1 <- renderText({
+TxPV1 <- input$TxPV / 100
+vec5x <- as.numeric(unlist(strsplit(input$vec5,",")))
+vec6x <- as.numeric(unlist(strsplit(input$vec6,",")))
+results8 <- NPV(input$InvestPV, vec5x, vec6x, TxPV1) - input$InvestPV
+paste("La PV vaut", results8) #vérifier résultat sur excel
     })
 }
 
