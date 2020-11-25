@@ -7,11 +7,18 @@
 #    http://shiny.rstudio.com/
 #
 
+# global.R
 library(shiny)
 library(shinythemes)
 library(ggplot2)
 library(tidyverse)
 library(FinancialMath)
+library(polished)
+
+#polished::global_sessions_config(
+    #app_name = "CorporateFi",
+    #api_key = Sys.getenv("POLISHED_TOKEN")
+#)
 
 #Define UI ----
 ui = fluidPage(theme = shinytheme("superhero"),
@@ -209,7 +216,7 @@ ui = fluidPage(theme = shinytheme("superhero"),
     )
 )
              
-
+#polished::secure_ui(ui)
             
 
 
@@ -294,6 +301,8 @@ results8 <- NPV(input$InvestPV, vec5x, vec6x, TxPV1) - input$InvestPV
 paste("La PV vaut", results8) #vérifier résultat sur excel
     })
 }
+
+#polished::secure_server(server)
 
 # Run the App ----
 shinyApp(ui, server)
