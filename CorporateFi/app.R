@@ -10,7 +10,6 @@
 # global.R
 library(shiny)
 library(shinythemes)
-library(ggplot2)
 library(tidyverse)
 library(FinancialMath)
 library(polished)
@@ -196,9 +195,6 @@ ui = fluidPage(theme = shinytheme("superhero"),
                 img(src = "PV.png", height = 70, width = 250, align = "center"),
                 br(),
                 textInput('vec5', 'Entrer les cashflows (en séparant par une virgule)', "0,1,2,3"),
-                numericInput(inputId = "InvestPV",
-                             label = "Valeur de l'investissement de départ (ne pas mettre de -) :",
-                             value = 0),
                 textInput('vec6', 'Entrer les périodes (en séparant par une virgule)', "1,2,3,4"),
                 numericInput(inputId = "TxPV",
                              label = "Taux (ex : si 1% entrer 1 et non 0,01) :",
@@ -297,7 +293,7 @@ paste("La NPV vaut ", results7)
 TxPV1 <- input$TxPV / 100
 vec5x <- as.numeric(unlist(strsplit(input$vec5,",")))
 vec6x <- as.numeric(unlist(strsplit(input$vec6,",")))
-results8 <- NPV(input$InvestPV, vec5x, vec6x, TxPV1) - input$InvestPV
+results8 <- NPV(0, vec5x, vec6x, TxPV1)
 paste("La PV vaut", results8) #vérifier résultat sur excel
     })
 }
