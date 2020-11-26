@@ -10,39 +10,11 @@
 # global.R ----
 library(shiny)
 library(shinythemes)
-library(tidyverse)
+library(dplyr)
 library(FinancialMath)
-library(polished)
-library(config)
-
-polished::global_sessions_config(
-    app_name = "corporatefi",
-    api_key = Sys.getenv("POLISHED_TOKEN")
-)
 
 #Define UI ----
-ui = polished::secure_ui(fluidPage(theme = shinytheme("superhero"),
-               fluidRow(
-                   column(
-                       6,
-                       h1("Hello Shiny!")
-                   ),
-                   column(
-                       6,
-                       br(),
-                       actionButton(
-                           "sign_out",
-                           "Sign Out",
-                           icon = icon("sign-out-alt"),
-                           class = "pull-right"
-                       )
-                   ),
-                   column(
-                       12,
-                       verbatimTextOutput("user_out")
-                   )
-               ),
-               
+ui = fluidPage(theme = shinytheme("superhero"),
     navbarPage("Corporate Finance",
     tabPanel("Crédit",{
     sidebarLayout(
@@ -232,22 +204,11 @@ ui = polished::secure_ui(fluidPage(theme = shinytheme("superhero"),
         )}
     )
     )
-))
-             
-#polished::secure_ui(ui)
+)
             
 
-
 # Define server logic ----
-server <- polished::secure_server(function(input, output, session) {
-    output$user_out <- renderPrint({
-        session$userData$user()
-    })
-    
-    observeEvent(input$sign_out, {
-        sign_out_from_shiny()
-        session$reload()
-    })
+server <- function(input, output, session) {
     
     output$CoutAnnuite <- renderText({
 firstF <- (input$Tx/100) / (1-(1+input$Tx/100)^-input$D)
@@ -327,7 +288,7 @@ vec6x <- as.numeric(unlist(strsplit(input$vec6,",")))
 results8 <- NPV(0, vec5x, vec6x, TxPV1)
 paste("La PV vaut", results8) #vérifier résultat sur excel
     })
-})
+}
 
 #polished::secure_server(server)
 

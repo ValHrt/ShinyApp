@@ -5,8 +5,8 @@ account: valhrt
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3306791
-bundleId: 3909791
+bundleId: 3910137
 url: https://valhrt.shinyapps.io/CorporateFi/
-when: 1606412302.02871
+when: 1606420736.89186
 asMultiple: FALSE
 asStatic: FALSE
